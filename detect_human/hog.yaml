@@ -1,0 +1,35 @@
+config:
+  input_img: "test5.jpg"
+  model: "model_hog_person.joblib"
+  image_pyramid: [140, 200, 256]
+  window_height: 128
+  window_width: 64
+  window_step: 16
+  prob_threshold: 0.9
+  overlap_threshold: 0.4
+
+object_detector:
+  $ObjectDetector:
+    input_img: =/config/input_img
+    image_pyramid: =/config/image_pyramid
+    window_step: =/config/window_step
+    window_height: =/config/window_height
+    window_width: =/config/window_width
+    feature_extractor: =/feature_extractor/hog
+    model: =/config/model
+    prob_threshold: =/config/prob_threshold
+    nms: =/nms
+  run(): "__call__"
+
+feature_extractor:
+  hog:
+    $HOGFeature:
+      window_height: =/config/window_height
+      window_width: =/config/window_width
+      cell_size: 8
+      block_size: 2
+      bins: 9
+
+nms:
+  $NMS:
+    overlap_threshold: =/config/overlap_threshold
